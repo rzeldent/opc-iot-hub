@@ -1,7 +1,8 @@
 ﻿using System;
+
 namespace OpcAzureIot
 {
-    public interface IOpcSource
+    public interface ISampleSink : IObserver<ISample>
     {
     }
 }

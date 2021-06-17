@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using Serilog;
 
 namespace OpcAzureIot
 {
-    public class Program
+    public static class Program
     {
         public static void Main(string[] args)
         {
@@ -19,9 +15,15 @@ namespace OpcAzureIot
             Host.CreateDefaultBuilder(args)
                 .ConfigureServices((hostContext, services) =>
                 {
+                    services.AddTransient<IConfigurationAzureIotHub, ConfigurationOpcAzureIot>();
+                    services.AddTransient<IConfigurationOpc, ConfigurationOpcAzureIot>();
+                    services.AddTransient<ISampleSink, AzureIotHub.AzureSampleSink>();
+                    //services.AddTransient<ISampleSink, Mocks.MockSampleSink>();
+                    //services.AddTransient<ISampleSource, Opc.OpcSampleSource>();
+                    services.AddTransient<ISampleSource, Mocks.MockSampleSource>();
                     services.AddHostedService<Worker>();
-                    services.AddLogging(configure => configure.AddConsole()).AddTransient<Worker>();
-                    services.AddSingleton<IOpcSource, OpcSource>();
-                });
-    }
+                })
+                .UseSerilog((hostingContext, loggerConfiguration) => loggerConfiguration
+                    .ReadFrom.Configuration(hostingContext.Configuration));
+           }
 }

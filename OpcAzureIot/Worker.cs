@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
@@ -13,22 +14,33 @@ namespace OpcAzureIot
     public class Worker : BackgroundService
     {
         private readonly ILogger<Worker> _logger;
+        private readonly ISampleSink _sink;
+        private readonly ISampleSource _source;
 
-        private readonly IOpcSource _opcSource;
-
-        public Worker(ILogger<Worker> logger, IOpcSource opcSource)
+        public Worker(ILogger<Worker> logger, ISampleSink sink, ISampleSource source)
         {
             _logger = logger;
-            _opcSource = opcSource;
+            _sink = sink;
+            _source = source;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
+            var subscription = _source.Subscribe(_sink);
+
+            var publishTask = _source.Publish(stoppingToken);
+
             while (!stoppingToken.IsCancellationRequested)
             {
-                _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
+                //_logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
                 await Task.Delay(1000, stoppingToken);
             }
+
+            publishTask.GetAwaiter().GetResult();
+
+            subscription.Dispose();
+
+
         }
     }
 }

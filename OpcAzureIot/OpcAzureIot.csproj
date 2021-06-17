@@ -6,12 +6,40 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0" />
     <PackageReference Include="Workstation.UaClient" Version="3.1.0" />
+    <PackageReference Include="Microsoft.Azure.Devices.Client" Version="1.37.2" />
+    <PackageReference Include="Serilog" Version="2.10.0" />
+    <PackageReference Include="Serilog.Extensions.Logging" Version="3.0.1" />
+    <PackageReference Include="Serilog.Settings.Configuration" Version="3.1.0" />
+    <PackageReference Include="Serilog.Extensions.Hosting" Version="4.1.2" />
+    <PackageReference Include="Serilog.Sinks.RollingFile" Version="3.3.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0" />
+    <PackageReference Include="Serilog.Sinks.ColoredConsole" Version="3.0.1" />
+    <PackageReference Include="Serilog.Exceptions" Version="7.0.0" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Workstation.UaClient" />
     <None Remove="Topshelf" />
     <None Remove="Topshelf.Extensions.Hosting" />
+    <None Remove="Opc\" />
+    <None Remove="Azure.IotHub\" />
+    <None Remove="Microsoft.Azure.Devices.Client" />
+    <None Remove="Serilog.Sinks.Console" />
+    <None Remove="Serilog.Sinks.File" />
+    <None Remove="Serilog" />
+    <None Remove="Serilog.Extensions.Logging" />
+    <None Remove="Mocks\" />
+    <None Remove="Serilog.Settings.Configuration" />
+    <None Remove="Serilog.Extensions.Hosting" />
+    <None Remove="Serilog.Sinks.RollingFile" />
+    <None Remove="Microsoft.Extensions.Logging" />
+    <None Remove="Microsoft.Extensions.Hosting" />
+    <None Remove="Serilog.Sinks.ColoredConsole" />
+    <None Remove="Serilog.Exceptions" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Opc\" />
+    <Folder Include="AzureIotHub\" />
+    <Folder Include="Mocks\" />
   </ItemGroup>
 </Project>
