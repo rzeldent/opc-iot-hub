@@ -10,11 +10,11 @@ using Microsoft.Extensions.Logging;
 using Workstation.ServiceModel.Ua;
 using Workstation.ServiceModel.Ua.Channels;
 
-namespace OpcAzureIot.Opc
+namespace OpcIotHub.Opc
 {
     public class OpcSampleSource : ISampleSource
     {
-        const string ApplicationName = nameof(OpcAzureIot);
+        const string ApplicationName = nameof(OpcIotHub);
 
         private readonly ILogger<OpcSampleSource> _logger;
         private readonly IConfigurationOpc _configuration;
@@ -65,7 +65,7 @@ namespace OpcAzureIot.Opc
 
                     var opcSubscriptionResponse = await channel.CreateSubscriptionAsync(new CreateSubscriptionRequest
                     {
-                        RequestedPublishingInterval = 1000,
+                        RequestedPublishingInterval = 100,
                         RequestedMaxKeepAliveCount = 10,
                         RequestedLifetimeCount = 30,
                         PublishingEnabled = true

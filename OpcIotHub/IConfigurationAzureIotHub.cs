@@ -1,4 +1,4 @@
-﻿namespace OpcAzureIot
+﻿namespace OpcIotHub
 {
     public interface IConfigurationAzureIotHub
     {

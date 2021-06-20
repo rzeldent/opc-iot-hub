@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace OpcAzureIot
+namespace OpcIotHub
 {
     public interface ISampleSource : IObservable<ISample>
     {

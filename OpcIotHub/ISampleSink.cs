@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace OpcAzureIot
+namespace OpcIotHub
 {
     public interface ISampleSink : IObserver<ISample>
     {

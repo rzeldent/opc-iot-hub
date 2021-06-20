@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Hosting;
 using Serilog;
 
-namespace OpcAzureIot
+namespace OpcIotHub
 {
     public static class Program
     {
@@ -15,9 +15,11 @@ namespace OpcAzureIot
             Host.CreateDefaultBuilder(args)
                 .ConfigureServices((hostContext, services) =>
                 {
-                    services.AddTransient<IConfigurationAzureIotHub, ConfigurationOpcAzureIot>();
-                    services.AddTransient<IConfigurationOpc, ConfigurationOpcAzureIot>();
-                    services.AddTransient<ISampleSink, AzureIotHub.AzureSampleSink>();
+                    services.AddTransient<IConfigurationAzureIotHub, ConfigurationOpcIotHub>();
+                    services.AddTransient<IConfigurationAmazionAwsIot, ConfigurationOpcIotHub>();
+                    services.AddTransient<IConfigurationOpc, ConfigurationOpcIotHub>();
+                    //services.AddTransient<ISampleSink, AzureIotHub.AzureSampleSink>();
+                    services.AddTransient<ISampleSink, AmazonAwsIot.AmazonSampleSink>();
                     //services.AddTransient<ISampleSink, Mocks.MockSampleSink>();
                     //services.AddTransient<ISampleSource, Opc.OpcSampleSource>();
                     services.AddTransient<ISampleSource, Mocks.MockSampleSource>();

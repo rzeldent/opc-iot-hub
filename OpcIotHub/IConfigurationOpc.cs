@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace OpcAzureIot
+namespace OpcIotHub
 {
     public interface IConfigurationOpc
     {

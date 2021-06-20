@@ -5,6 +5,9 @@
     <UserSecretsId>dotnet-OpcAzureIot-549A68C0-E830-4797-B59F-6734E85E7B49</UserSecretsId>
   </PropertyGroup>
 
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'OpcAzureIot' ">
+    <ExternalConsole>true</ExternalConsole>
+  </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Workstation.UaClient" Version="3.1.0" />
     <PackageReference Include="Microsoft.Azure.Devices.Client" Version="1.37.2" />
@@ -16,6 +19,7 @@
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0" />
     <PackageReference Include="Serilog.Sinks.ColoredConsole" Version="3.0.1" />
     <PackageReference Include="Serilog.Exceptions" Version="7.0.0" />
+    <PackageReference Include="AWSSDK.IotData" Version="3.7.0.32" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Workstation.UaClient" />
@@ -36,10 +40,16 @@
     <None Remove="Microsoft.Extensions.Hosting" />
     <None Remove="Serilog.Sinks.ColoredConsole" />
     <None Remove="Serilog.Exceptions" />
+    <None Remove="AmazonAwsIot\" />
+    <None Remove="AWSSDK.IoT" />
+    <None Remove="M2Mqtt" />
+    <None Remove="M2MqttDotnetCore" />
+    <None Remove="AWSSDK.IotData" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Opc\" />
     <Folder Include="AzureIotHub\" />
     <Folder Include="Mocks\" />
+    <Folder Include="AmazonAwsIot\" />
   </ItemGroup>
 </Project>

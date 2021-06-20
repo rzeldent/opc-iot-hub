@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
 // See: https://dotnetcoretutorials.com/2019/12/07/creating-windows-services-in-net-core-part-3-the-net-core-worker-way/
 
-namespace OpcAzureIot
+namespace OpcIotHub
 {
     public class Worker : BackgroundService
     {
@@ -24,23 +21,23 @@ namespace OpcAzureIot
             _source = source;
         }
 
-        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+        protected override async Task ExecuteAsync(CancellationToken stopToken)
         {
             var subscription = _source.Subscribe(_sink);
 
-            var publishTask = _source.Publish(stoppingToken);
+            var publishTask = _source.Publish(stopToken);
 
-            while (!stoppingToken.IsCancellationRequested)
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
+            while (!stopToken.IsCancellationRequested)
             {
-                //_logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
-                await Task.Delay(1000, stoppingToken);
+                _logger.LogInformation("Worker running for: {elapsed}", stopwatch.Elapsed);
+                await Task.Delay(10000, stopToken);
             }
 
             publishTask.GetAwaiter().GetResult();
 
             subscription.Dispose();
-
-
         }
     }
 }
