@@ -19,7 +19,8 @@
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0" />
     <PackageReference Include="Serilog.Sinks.ColoredConsole" Version="3.0.1" />
     <PackageReference Include="Serilog.Exceptions" Version="7.0.0" />
-    <PackageReference Include="AWSSDK.IotData" Version="3.7.0.32" />
+    <PackageReference Include="MQTTnet" Version="3.0.15" />
+    <PackageReference Include="MQTTnet.Extensions.ManagedClient" Version="3.0.15" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Workstation.UaClient" />
@@ -45,11 +46,14 @@
     <None Remove="M2Mqtt" />
     <None Remove="M2MqttDotnetCore" />
     <None Remove="AWSSDK.IotData" />
+    <None Remove="MQTTnet" />
+    <None Remove="MQTTnet.Extensions.External.RxMQTT.Client" />
+    <None Remove="MQTTnet.Extensions.ManagedClient" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Opc\" />
     <Folder Include="AzureIotHub\" />
     <Folder Include="Mocks\" />
-    <Folder Include="AmazonAwsIot\" />
+    <Folder Include="Mqtt\" />
   </ItemGroup>
 </Project>

@@ -7,7 +7,7 @@ using Workstation.ServiceModel.Ua;
 
 namespace OpcIotHub
 {
-    public class ConfigurationOpcIotHub : IConfigurationOpc, IConfigurationAzureIotHub, IConfigurationAmazionAwsIot
+    public class ConfigurationOpcIotHub : IConfigurationOpc, IConfigurationAzureIotHub, IConfigurationMqtt
     {
         private readonly ILogger<ConfigurationOpcIotHub> _logger;
         private readonly IConfiguration _configuration;
@@ -28,9 +28,10 @@ namespace OpcIotHub
 
         public string IotHubConnectionString => _configuration.GetSection("Azure:IotHub")["ConnectionString"];
 
-        public string PemCertificate => _configuration.GetSection("Amazon:IotHub")["PemCertificate"];
+        public string CaCertificate => _configuration.GetSection("Amazon:IotHub")["CaCertificate"];
+        public string ClientCertificate => _configuration.GetSection("Amazon:IotHub")["ClientCertificate"];
 
-        public string Endpoint => _configuration.GetSection("Amazon:IotHub")["Endpoint"];
+        public string ServiceUrl => _configuration.GetSection("Amazon:IotHub")["ServiceUrl"];
 
         public string Topic => _configuration.GetSection("Amazon:IotHub")["Topic"];
     }

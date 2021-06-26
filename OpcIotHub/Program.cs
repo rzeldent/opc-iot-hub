@@ -16,10 +16,10 @@ namespace OpcIotHub
                 .ConfigureServices((hostContext, services) =>
                 {
                     services.AddTransient<IConfigurationAzureIotHub, ConfigurationOpcIotHub>();
-                    services.AddTransient<IConfigurationAmazionAwsIot, ConfigurationOpcIotHub>();
+                    services.AddTransient<IConfigurationMqtt, ConfigurationOpcIotHub>();
                     services.AddTransient<IConfigurationOpc, ConfigurationOpcIotHub>();
                     //services.AddTransient<ISampleSink, AzureIotHub.AzureSampleSink>();
-                    services.AddTransient<ISampleSink, AmazonAwsIot.AmazonSampleSink>();
+                    services.AddTransient<ISampleSink, Mqtt.MqttSampleSink>();
                     //services.AddTransient<ISampleSink, Mocks.MockSampleSink>();
                     //services.AddTransient<ISampleSource, Opc.OpcSampleSource>();
                     services.AddTransient<ISampleSource, Mocks.MockSampleSource>();
