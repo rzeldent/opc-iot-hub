@@ -44,6 +44,17 @@ Show the connection string to enter in the appSettings.json:
 PS> az iot hub device-identity connection-string show --hub-name <Hub name> --device-id <Device name> --output table
 ```
 
+### MQTT
+
+### Amazon AWS
+
+## TODO
+
+Feel free to participate.
+
+- Get Amazon AWS working. Still some issues with special signing required for AWS.
+- More sinks?
+
 ## Thanks
 
 Many thanks to Converter Systems LLC (Cross River, NY), especially to [Andrew Cullen](https://github.com/awcullen) for making the OPC library available allowing projects like this!
