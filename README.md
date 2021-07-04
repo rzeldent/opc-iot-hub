@@ -26,6 +26,24 @@ Sinks:
   - MQTT; Uses a standard MQTT message bus,
   - Mock; Just logs the data.
 
+## Setup
+
+### Azure
+
+Create an IOT hub in Azure. Then open a cloud console.
+
+
+Add the device to the hub:
+```PowerShell
+PS> az iot hub device-identity create --hub-name <Hub name> --device-id <Device name>
+
+```
+
+Show the connection string to enter in the appSettings.json:
+```PowerShell
+PS> az iot hub device-identity connection-string show --hub-name <Hub name> --device-id <Device name> --output table
+```
+
 ## Thanks
 
 Many thanks to Converter Systems LLC (Cross River, NY), especially to [Andrew Cullen](https://github.com/awcullen) for making the OPC library available allowing projects like this!
