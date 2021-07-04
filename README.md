@@ -1,8 +1,8 @@
 # OpcIotHub
 
 ## Description
-This application uses the OPC Unified Architecture (OPC UA) to accept a list of nodes andsubscribe to their value.
-When a change is received, it pushesthe new value to the an IOT hub. Here the data can be processed near realtime.
+This application uses the OPC Unified Architecture (OPC UA) to accept a list of nodes and subscribe to their value.
+When a change is received, it pushes the new value to the an IOT hub. Here the data can be processed near realtime.
  
 ## Usage
 This application can be used to publish industrial data to the cloud where it can be analyzed. Practical uses are:
