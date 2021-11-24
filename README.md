@@ -3,6 +3,7 @@
 ## Description
 This application uses the OPC Unified Architecture (OPC UA) to accept a list of nodes and subscribe to their value.
 When a change is received, it pushes the new value to the an IOT hub. Here the data can be processed near realtime.
+This ideal to monitor values from PLCs, like the Siemens SIMATIC S7-1500.
  
 ## Usage
 This application can be used to publish industrial data to the cloud where it can be analyzed. Practical uses are:
