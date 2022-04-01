@@ -56,7 +56,7 @@ namespace OpcIotHub.Opc
                 try
                 {
                     // try opening a session and reading a few nodes.
-                    await channel.OpenAsync();
+                    await channel.OpenAsync(token);
 
                     _logger.LogDebug("Opened session with endpoint {@EndpointUrl}", channel.RemoteEndpoint.EndpointUrl);
                     _logger.LogDebug("SecurityPolicy: {SecurityPolicy}", channel.RemoteEndpoint.SecurityPolicyUri);
@@ -69,7 +69,7 @@ namespace OpcIotHub.Opc
                         RequestedMaxKeepAliveCount = 10,
                         RequestedLifetimeCount = 30,
                         PublishingEnabled = true
-                    });
+                    }, token);
                     if (StatusCode.IsBad(opcSubscriptionResponse.ResponseHeader.ServiceResult))
                     {
                         _logger.LogError("CreateSubscriptionAsync failed. ServiceResult:{ServiceResult}", opcSubscriptionResponse.ResponseHeader.ServiceResult);
@@ -92,8 +92,7 @@ namespace OpcIotHub.Opc
                             {
                                 NodeId = n.NodeId,
                                 AttributeId = AttributeIds.Value
-                            }
-                                ,
+                            },
                             MonitoringMode = MonitoringMode.Reporting,
                             RequestedParameters = new MonitoringParameters
                             {
@@ -153,10 +152,7 @@ namespace OpcIotHub.Opc
                             }
                         },
                         // need to handle error when server closes
-                        ex =>
-                        {
-                            _logger.LogError(ex, "Error subscription on channel");
-                        });
+                        ex => _logger.LogError(ex, "Error subscription on channel"));
 
                     try
                     {
@@ -172,17 +168,17 @@ namespace OpcIotHub.Opc
                     };
 
                     _logger.LogDebug("Deleting subscription {SubscriptionId}", subscriptionId);
-                    await channel.DeleteSubscriptionsAsync(request);
+                    await channel.DeleteSubscriptionsAsync(request, token);
                     subscription.Dispose();
 
                     _logger.LogDebug("Closing session {SessionId}", channel.SessionId);
-                    await channel.CloseAsync();
+                    await channel.CloseAsync(token);
 
                 }
                 catch (Exception ex)
                 {
                     _logger.LogError(ex, "Exception setting up OPC connection");
-                    await channel.AbortAsync();
+                    await channel.AbortAsync(token);
                     _samples.OnError(ex);
                     try
                     {

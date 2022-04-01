@@ -43,7 +43,7 @@ namespace OpcIotHub.Mocks
                 var subscription = _samples.Connect();
                 token.WaitHandle.WaitOne();
                 subscription.Dispose();
-            });
+            }, token);
         }
     }
 }

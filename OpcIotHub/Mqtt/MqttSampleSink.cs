@@ -39,38 +39,30 @@ namespace OpcIotHub.Mqtt
                 .WithClientOptions(new MqttClientOptionsBuilder()
                 .WithTcpServer(_configuration.ServiceUrl, 8883)
                 .WithTls(new MqttClientOptionsBuilderTlsParameters
-                    {
-                        UseTls = true,
-                        SslProtocol = System.Security.Authentication.SslProtocols.Tls12,
-                        Certificates = new[]
+                {
+                    UseTls = true,
+                    SslProtocol = System.Security.Authentication.SslProtocols.Tls12,
+                    Certificates = new[]
                         {
-                            /*caCertificate, */clientCertificate
+                            clientCertificate
                         },
 
-                        CertificateValidationHandler = (MqttClientCertificateValidationCallbackContext ctx) =>
-                        {
-                            return true;
-                        }
+                    CertificateValidationHandler = (MqttClientCertificateValidationCallbackContext ctx) =>
+                    {
+                        return true;
                     }
+                }
                     )
                     .WithProtocolVersion(MqttProtocolVersion.V311)
                 )
                 .Build();
 
             _client = new MqttFactory().CreateManagedMqttClient();
-            
-            _client.ConnectedHandler = new MqttClientConnectedHandlerDelegate(onSubscriberConnected =>
-            {
-                _logger.LogInformation("OnConnected:{@}", onSubscriberConnected);
-            });
-            _client.DisconnectedHandler = new MqttClientDisconnectedHandlerDelegate(onSubscriberDisconnected => {
-                _logger.LogInformation("OnDisonnected");
-            });
-            _client.ApplicationMessageReceivedHandler = new MqttApplicationMessageReceivedHandlerDelegate(onSubscriberMessageReceived=>
-            {
-                _logger.LogInformation("MessageReceived");
-            });
-            
+
+            _client.ConnectedHandler = new MqttClientConnectedHandlerDelegate(onSubscriberConnected => _logger.LogInformation("OnConnected:{@}", onSubscriberConnected));
+            _client.DisconnectedHandler = new MqttClientDisconnectedHandlerDelegate(onSubscriberDisconnected => _logger.LogInformation("OnDisonnected"));
+            _client.ApplicationMessageReceivedHandler = new MqttApplicationMessageReceivedHandlerDelegate(onSubscriberMessageReceived => _logger.LogInformation("MessageReceived"));
+
             await _client.StartAsync(options);
         }
 
@@ -87,7 +79,7 @@ namespace OpcIotHub.Mqtt
 
         public async void OnNext(ISample value)
         {
-            string json = JsonConvert.SerializeObject(value);
+            var json = JsonConvert.SerializeObject(value);
             var result = await _client.PublishAsync(new MqttApplicationMessage
             {
                 Topic = _configuration.Topic,

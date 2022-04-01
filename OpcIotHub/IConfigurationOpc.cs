@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using OpcIotHub.Opc;
+using System.Collections.Generic;
 
 namespace OpcIotHub
 {
@@ -9,6 +10,6 @@ namespace OpcIotHub
         public string OpcUsername { get; }
         public string OpcPassword { get; }
         // Opc:Nodes
-        IEnumerable<Opc.OpcNode> MonitorNodes { get; }
+        IEnumerable<OpcNode> MonitorNodes { get; }
     }
 }
