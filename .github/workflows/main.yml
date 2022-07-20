@@ -26,5 +26,5 @@ jobs:
     - name: Archive
       uses: actions/upload-artifact@v2
       with:
-        name: OpcIotHub.dll
-        path: ./opc-iot-hub/opc-iot-hub/OpcIotHub/bin/Release/net6.0/OpcIotHub.dll
+        name: OpcIotHub
+        path: /home/runner/work/opc-iot-hub/opc-iot-hub/OpcIotHub/bin/Release/net6.0/publish/
