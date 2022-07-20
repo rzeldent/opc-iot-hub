@@ -1,5 +1,7 @@
 # OpcIotHub
 
+[![.NET Core](https://github.com/rzeldent/opc-iot-hub/actions/workflows/main.yml/badge.svg)](https://github.com/rzeldent/opc-iot-hub/actions/workflows/main.yml)
+
 ## Description
 This application uses the OPC Unified Architecture (OPC UA) to accept a list of nodes and subscribe to their value.
 When a change is received, it pushes the new value to the an IOT hub. Here the data can be processed near realtime.
