@@ -21,3 +21,8 @@ jobs:
       run: dotnet build --configuration Release --no-restore
     - name: Test
       run: dotnet test --no-restore --verbosity normal
+    - name: Archive
+      uses: actions/upload-artifact@v2
+      with:
+        name: OpcIotHub.dll
+        path: bin/Release/net6.0/OpcIotHub.dll
