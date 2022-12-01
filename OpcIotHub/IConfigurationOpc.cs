@@ -10,6 +10,6 @@ namespace OpcIotHub
         public string OpcUsername { get; }
         public string OpcPassword { get; }
         // Opc:Nodes
-        IEnumerable<OpcNode> MonitorNodes { get; }
+        public IEnumerable<OpcNode> MonitorNodes { get; }
     }
 }

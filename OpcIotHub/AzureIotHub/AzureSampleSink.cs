@@ -9,12 +9,11 @@ namespace OpcIotHub.AzureIotHub
 {
     public class AzureSampleSink : ISampleSink, IDisposable
     {
-        private readonly ILogger<AzureSampleSink> _logger;
-
-        private DeviceClient _deviceClient;
+        private readonly ILogger<AzureSampleSink> Logger;
         private const TransportType _transportType = TransportType.Mqtt;
+        private DeviceClient _client;
 
-        private readonly JsonSerializerOptions jsonSerializerOptions = new JsonSerializerOptions
+        private static readonly JsonSerializerOptions jsonSerializerOptions = new JsonSerializerOptions
         {
             Converters =
             {
@@ -24,11 +23,10 @@ namespace OpcIotHub.AzureIotHub
 
         public AzureSampleSink(ILogger<AzureSampleSink> logger, IConfigurationAzureIotHub configuration)
         {
-            _logger = logger;
-
+            Logger = logger;
             // Connect to the IoT hub using the MQTT protocol
-            _logger.LogInformation("Creating device client to: {0}", configuration.IotHubConnectionString);
-            _deviceClient = DeviceClient.CreateFromConnectionString(configuration.IotHubConnectionString, _transportType);
+            Logger.LogInformation("Creating device client to: {0}", configuration.IotHubConnectionString);
+            _client = DeviceClient.CreateFromConnectionString(configuration.IotHubConnectionString, _transportType);
         }
 
         public void OnCompleted()
@@ -38,8 +36,8 @@ namespace OpcIotHub.AzureIotHub
 
         public async void OnError(Exception error)
         {
-            _logger.LogError(error, "OnError");
-            await _deviceClient?.CloseAsync();
+            Logger.LogError(error, "OnError");
+            await _client?.CloseAsync();
         }
 
         public async void OnNext(ISample value)
@@ -50,14 +48,14 @@ namespace OpcIotHub.AzureIotHub
                 ContentType = "application/json",
                 ContentEncoding = "utf-8",
             };
-            await _deviceClient.SendEventAsync(message);
-            _logger.LogInformation("Sent message: {Message}", messageBody);
+            await _client.SendEventAsync(message);
+            Logger.LogInformation("Sent message: {Message}", messageBody);
         }
 
         public async void Dispose()
         {
-            _logger.LogInformation("Dispose");
-            await _deviceClient?.CloseAsync();
+            Logger.LogInformation("Dispose");
+            await _client?.CloseAsync();
         }
     }
 }

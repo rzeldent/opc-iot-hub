@@ -6,7 +6,7 @@ namespace OpcIotHub
 {
     public interface ISampleSource : IObservable<ISample>
     {
-        Task Publish(CancellationToken token);
+        public Task Publish(CancellationToken token);
     }
 
 }

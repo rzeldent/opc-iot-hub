@@ -4,9 +4,9 @@ namespace OpcIotHub
 {
     public interface ISample
     {
-        DateTime Timestamp { get; }
-        string PropertyName { get; }
-        object Value { get; }
-        SiUnit? Unit { get; }
+        public DateTime Timestamp { get; }
+        public string PropertyName { get; }
+        public object Value { get; }
+        public SiUnit? Unit { get; }
     }
 }

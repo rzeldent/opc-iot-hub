@@ -16,8 +16,8 @@ namespace OpcIotHub.Opc
     {
         const string ApplicationName = nameof(OpcIotHub);
 
-        private readonly ILogger<OpcSampleSource> _logger;
-        private readonly IConfigurationOpc _configuration;
+        private readonly ILogger<OpcSampleSource> Logger;
+        private readonly IConfigurationOpc Configuration;
 
         static readonly ApplicationDescription clientDescription = new ApplicationDescription
         {
@@ -35,33 +35,33 @@ namespace OpcIotHub.Opc
 
         public OpcSampleSource(ILogger<OpcSampleSource> logger, IConfigurationOpc configuration)
         {
-            _logger = logger;
-            _configuration = configuration;
+            Logger = logger;
+            Configuration = configuration;
         }
 
        public async Task Publish(CancellationToken token = default)
         {
             // Create a mapping ClientHandle to Node
-            var lastMonitorClientHandle = (uint)0;
+            var lastMonitorClientHandle = 0U;
             var handleToOpcNode = new Dictionary<uint, OpcNode>();
 
             // Create a directory for the Certificate store
             var certificateStore = new DirectoryStore(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), ApplicationName, "pki"));
             // create a 'UaTcpSessionChannel', a client-side channel that opens a 'session' with the server.
-            var userIdentity = string.IsNullOrEmpty(_configuration.OpcUsername) ? new AnonymousIdentity() : (IUserIdentity)new UserNameIdentity(_configuration.OpcUsername, _configuration.OpcPassword);
+            var userIdentity = string.IsNullOrEmpty(Configuration.OpcUsername) ? new AnonymousIdentity() : (IUserIdentity)new UserNameIdentity(Configuration.OpcUsername, Configuration.OpcPassword);
 
             while (!token.IsCancellationRequested)
             {
-                var channel = new UaTcpSessionChannel(clientDescription, certificateStore, userIdentity, _configuration.OpcEndpointUrl, SecurityPolicyUris.None);
+                var channel = new UaTcpSessionChannel(clientDescription, certificateStore, userIdentity, Configuration.OpcEndpointUrl, SecurityPolicyUris.None);
                 try
                 {
                     // try opening a session and reading a few nodes.
                     await channel.OpenAsync(token);
 
-                    _logger.LogDebug("Opened session with endpoint {@EndpointUrl}", channel.RemoteEndpoint.EndpointUrl);
-                    _logger.LogDebug("SecurityPolicy: {SecurityPolicy}", channel.RemoteEndpoint.SecurityPolicyUri);
-                    _logger.LogDebug("SecurityMode: {SecurityMode}", channel.RemoteEndpoint.SecurityMode);
-                    _logger.LogDebug("UserIdentityToken: {@UserIdentity}", channel.UserIdentity);
+                    Logger.LogDebug("Opened session with endpoint {@EndpointUrl}", channel.RemoteEndpoint.EndpointUrl);
+                    Logger.LogDebug("SecurityPolicy: {SecurityPolicy}", channel.RemoteEndpoint.SecurityPolicyUri);
+                    Logger.LogDebug("SecurityMode: {SecurityMode}", channel.RemoteEndpoint.SecurityMode);
+                    Logger.LogDebug("UserIdentityToken: {@UserIdentity}", channel.UserIdentity);
 
                     var opcSubscriptionResponse = await channel.CreateSubscriptionAsync(new CreateSubscriptionRequest
                     {
@@ -72,18 +72,18 @@ namespace OpcIotHub.Opc
                     }, token);
                     if (StatusCode.IsBad(opcSubscriptionResponse.ResponseHeader.ServiceResult))
                     {
-                        _logger.LogError("CreateSubscriptionAsync failed. ServiceResult:{ServiceResult}", opcSubscriptionResponse.ResponseHeader.ServiceResult);
+                        Logger.LogError("CreateSubscriptionAsync failed. ServiceResult:{ServiceResult}", opcSubscriptionResponse.ResponseHeader.ServiceResult);
                         return;
                     }
 
                     var subscriptionId = opcSubscriptionResponse.SubscriptionId;
 
-                    var monitorNodes = _configuration.MonitorNodes.ToArray();
+                    var monitorNodes = Configuration.MonitorNodes.ToArray();
                     var itemsToCreate = monitorNodes.Select(n =>
                     {
                         var clientHandle = ++lastMonitorClientHandle;
                         handleToOpcNode[clientHandle] = n;
-                        _logger.LogDebug("Mapped handle {ClientHandle} to '{@OpcNode}'", clientHandle, n);
+                        Logger.LogDebug("Mapped handle {ClientHandle} to '{@OpcNode}'", clientHandle, n);
 
                         // Start monitoring the node. Mode = Reporting (on change)
                         return new MonitoredItemCreateRequest
@@ -112,7 +112,7 @@ namespace OpcIotHub.Opc
 
                     if (StatusCode.IsBad(createMonitoredItemsResponse.ResponseHeader.ServiceResult))
                     {
-                        _logger.LogError("CreateMonitoredItemsAsync failed. ServiceResult:{ServiceResult}", createMonitoredItemsResponse.ResponseHeader.ServiceResult);
+                        Logger.LogError("CreateMonitoredItemsAsync failed. ServiceResult:{ServiceResult}", createMonitoredItemsResponse.ResponseHeader.ServiceResult);
                         return;
                     }
 
@@ -120,12 +120,12 @@ namespace OpcIotHub.Opc
                     {
                         var statusCode = createMonitoredItemsResponse.Results[i].StatusCode;
                         if (StatusCode.IsBad(statusCode))
-                            _logger.LogWarning("Failed to monitor '{@OpcNode}'. StatusCode: {StatusCode}", monitorNodes[i], statusCode);
+                            Logger.LogWarning("Failed to monitor '{@OpcNode}'. StatusCode: {StatusCode}", monitorNodes[i], statusCode);
                     };
 
                     var subscription = channel.Where(pr => pr.SubscriptionId == subscriptionId).Subscribe(pr =>
                         {
-                            _logger.LogInformation("Received update for SubscriptionId: {SubscriptionId}", pr.SubscriptionId);
+                            Logger.LogInformation("Received update for SubscriptionId: {SubscriptionId}", pr.SubscriptionId);
                             var dcns = pr.NotificationMessage.NotificationData.OfType<DataChangeNotification>();
                             foreach (var dcn in dcns)
                             {
@@ -133,7 +133,7 @@ namespace OpcIotHub.Opc
                                 {
                                     if (!handleToOpcNode.TryGetValue(mi.ClientHandle, out var opcNode))
                                     {
-                                        _logger.LogError("Unknown ClientHandle: {ClientHandle}", mi.ClientHandle);
+                                        Logger.LogError("Unknown ClientHandle: {ClientHandle}", mi.ClientHandle);
                                         return;
                                     }
 
@@ -144,7 +144,7 @@ namespace OpcIotHub.Opc
                                         Value = mi.Value.Value,
                                         Unit = opcNode.Unit
                                     };
-                                    _logger.LogInformation("Created sample: {@Sample}", sample);
+                                    Logger.LogInformation("Created sample: {@Sample}", sample);
 
                                     // Publish the sample
                                     _samples.OnNext(sample);
@@ -152,7 +152,7 @@ namespace OpcIotHub.Opc
                             }
                         },
                         // need to handle error when server closes
-                        ex => _logger.LogError(ex, "Error subscription on channel"));
+                        ex => Logger.LogError(ex, "Error subscription on channel"));
 
                     try
                     {
@@ -167,17 +167,17 @@ namespace OpcIotHub.Opc
                         SubscriptionIds = new uint[] { subscriptionId }
                     };
 
-                    _logger.LogDebug("Deleting subscription {SubscriptionId}", subscriptionId);
+                    Logger.LogDebug("Deleting subscription {SubscriptionId}", subscriptionId);
                     await channel.DeleteSubscriptionsAsync(request, token);
                     subscription.Dispose();
 
-                    _logger.LogDebug("Closing session {SessionId}", channel.SessionId);
+                    Logger.LogDebug("Closing session {SessionId}", channel.SessionId);
                     await channel.CloseAsync(token);
 
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, "Exception setting up OPC connection");
+                    Logger.LogError(ex, "Exception setting up OPC connection");
                     await channel.AbortAsync(token);
                     _samples.OnError(ex);
                     try
