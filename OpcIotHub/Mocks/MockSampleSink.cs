@@ -5,26 +5,26 @@ namespace OpcIotHub.Mocks
 {
     public class MockSampleSink : ISampleSink
     {
-        private readonly ILogger<MockSampleSink> Logger;
+        private readonly ILogger<MockSampleSink> _logger;
 
         public MockSampleSink(ILogger<MockSampleSink> logger)
         {
-            Logger = logger;
+            _logger = logger;
         }
 
         public void OnCompleted()
         {
-            Logger.LogInformation("OnCompleted");
+            _logger.LogInformation("OnCompleted");
         }
 
         public void OnError(Exception error)
         {
-            Logger.LogError(error, "OnError");
+            _logger.LogError(error, "OnError");
         }
 
         public void OnNext(ISample value)
         {
-            Logger.LogInformation("OnNext: {@Sample}", value);
+            _logger.LogInformation("OnNext: {@Sample}", value);
         }
     }
 }

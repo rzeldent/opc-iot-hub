@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 using OpcIotHub.Opc;
 using Workstation.ServiceModel.Ua;
 
@@ -9,12 +8,10 @@ namespace OpcIotHub
 {
     public class ConfigurationOpcIotHub : IConfigurationOpc, IConfigurationAzureIotHub, IConfigurationMqtt
     {
-        private readonly ILogger<ConfigurationOpcIotHub> _logger;
         private readonly IConfiguration _configuration;
 
-        public ConfigurationOpcIotHub(ILogger<ConfigurationOpcIotHub> logger, IConfiguration configuration)
+        public ConfigurationOpcIotHub(IConfiguration configuration)
         {
-            _logger = logger;
             _configuration = configuration;
         }
 

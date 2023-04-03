@@ -4,7 +4,7 @@ namespace OpcIotHub
 {
     public static class SiSystem
     {
-        public static string ToString(double value, string format)
+        public static string ToString(double value)
         {
             var power = Math.Log10(value);
             var prefix = (SiPrefix)((Math.Floor(power / 3)) * 3);

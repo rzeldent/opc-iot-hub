@@ -13,27 +13,27 @@ namespace OpcIotHub.Mqtt
 {
     public class MqttSampleSink : ISampleSink
     {
-        private readonly ILogger<MqttSampleSink> Logger;
-        private readonly IConfigurationMqtt Configuration;
+        private readonly ILogger<MqttSampleSink> _logger;
+        private readonly IConfigurationMqtt _configuration;
 
         private IManagedMqttClient _client;
 
         public MqttSampleSink(ILogger<MqttSampleSink> logger, IConfigurationMqtt configuration)
         {
-            Logger = logger;
-            Configuration = configuration;
+            _logger = logger;
+            _configuration = configuration;
             Connect();
         }
 
         private async void Connect()
         {
-            var caCertificate = string.IsNullOrEmpty(Configuration.CaCertificate) ? null : new X509Certificate(Convert.FromBase64String(Configuration.CaCertificate));
-            var clientCertificate = string.IsNullOrEmpty(Configuration.ClientCertificate) ? null : new X509Certificate(Convert.FromBase64String(Configuration.ClientCertificate), string.Empty, X509KeyStorageFlags.Exportable);
-            Logger.LogInformation("Creating device client to: {0}", Configuration.ServiceUrl);
+            var caCertificate = string.IsNullOrEmpty(_configuration.CaCertificate) ? null : new X509Certificate(Convert.FromBase64String(_configuration.CaCertificate));
+            var clientCertificate = string.IsNullOrEmpty(_configuration.ClientCertificate) ? null : new X509Certificate(Convert.FromBase64String(_configuration.ClientCertificate), string.Empty, X509KeyStorageFlags.Exportable);
+            _logger.LogInformation("Creating device client to: {ServiceUrl}", _configuration.ServiceUrl);
             var options = new ManagedMqttClientOptionsBuilder()
                 .WithAutoReconnectDelay(TimeSpan.FromSeconds(30))
                 .WithClientOptions(new MqttClientOptionsBuilder()
-                .WithTcpServer(Configuration.ServiceUrl, 8883)
+                .WithTcpServer(_configuration.ServiceUrl, 8883)
                 .WithTls(new MqttClientOptionsBuilderTlsParameters
                 {
                     UseTls = true,
@@ -58,7 +58,7 @@ namespace OpcIotHub.Mqtt
 
         public void OnError(Exception error)
         {
-            Logger.LogError(error, "OnError");
+            _logger.LogError(error, "OnError");
             _client?.Dispose();
         }
 
@@ -67,12 +67,12 @@ namespace OpcIotHub.Mqtt
             var json = JsonConvert.SerializeObject(value);
             await _client.EnqueueAsync(new MqttApplicationMessage
             {
-                Topic = Configuration.Topic,
+                Topic = _configuration.Topic,
                 Payload = Encoding.UTF8.GetBytes(json),
                 QualityOfServiceLevel = MqttQualityOfServiceLevel.AtLeastOnce
             });
 
-            Logger.LogInformation("Pusblished: {Message}.", json);
+            _logger.LogInformation("Pusblished: {Message}.", json);
         }
     }
 }

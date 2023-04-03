@@ -10,27 +10,27 @@ namespace OpcIotHub
 {
     public class Worker : BackgroundService
     {
-        private readonly ILogger<Worker> Logger;
-        private readonly ISampleSink Sink;
-        private readonly ISampleSource Source;
+        private readonly ILogger<Worker> _logger;
+        private readonly ISampleSink _sink;
+        private readonly ISampleSource _source;
 
         public Worker(ILogger<Worker> logger, ISampleSink sink, ISampleSource source)
         {
-            Logger = logger;
-            Sink = sink;
-            Source = source;
+            _logger = logger;
+            _sink = sink;
+            _source = source;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stopToken)
         {
-            var subscription = Source.Subscribe(Sink);
-            var publishTask = Source.Publish(stopToken);
+            var subscription = _source.Subscribe(_sink);
+            var publishTask = _source.Publish(stopToken);
 
             var stopwatch = new Stopwatch();
             stopwatch.Start();
             while (!stopToken.IsCancellationRequested)
             {
-                Logger.LogInformation("Worker running for: {elapsed}", stopwatch.Elapsed);
+                _logger.LogInformation("Worker running for: {elapsed}", stopwatch.Elapsed);
                 await Task.Delay(10000, stopToken);
             }
 

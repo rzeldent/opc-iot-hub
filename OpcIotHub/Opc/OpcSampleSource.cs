@@ -39,7 +39,7 @@ namespace OpcIotHub.Opc
             Configuration = configuration;
         }
 
-       public async Task Publish(CancellationToken token = default)
+        public async Task Publish(CancellationToken token = default)
         {
             // Create a mapping ClientHandle to Node
             var lastMonitorClientHandle = 0U;
@@ -186,6 +186,7 @@ namespace OpcIotHub.Opc
                     }
                     catch (TaskCanceledException)
                     {
+                        Logger.LogError(ex, "Unable to stop setting up OPC connection");
                     }
                 }
             }

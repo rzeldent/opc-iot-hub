@@ -9,13 +9,13 @@ namespace OpcIotHub.Mocks
 {
     public class MockSampleSource : ISampleSource
     {
-        private readonly ILogger<MockSampleSource> Logger;
+        private readonly ILogger<MockSampleSource> _logger;
 
-        private IConnectableObservable<ISample> _samples;
+        private readonly IConnectableObservable<ISample> _samples;
 
         public MockSampleSource(ILogger<MockSampleSource> logger)
         {
-            Logger = logger;
+            _logger = logger;
 
             _samples = Observable
                 .Interval(TimeSpan.FromMilliseconds(2500))
@@ -27,7 +27,7 @@ namespace OpcIotHub.Mocks
                     Value = new Random().NextDouble() * 10
                 }
                 )
-                .Do(s => Logger.LogInformation("Generated new Sample: {@Sample}", s))
+                .Do(s => _logger.LogInformation("Generated new Sample: {@Sample}", s))
                 .Publish();
         }
 
