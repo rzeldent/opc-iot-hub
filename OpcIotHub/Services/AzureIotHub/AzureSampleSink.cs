@@ -4,16 +4,18 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.Azure.Devices.Client;
 using Microsoft.Extensions.Logging;
+using OpcIotHub.Interfaces;
+using OpcIotHub.Settings;
 
-namespace OpcIotHub.AzureIotHub
+namespace OpcIotHub.Services.AzureIotHub
 {
     public class AzureSampleSink : ISampleSink, IDisposable
     {
-        private readonly ILogger<AzureSampleSink> _logger;
         private const TransportType _transportType = TransportType.Mqtt;
+        private readonly ILogger<AzureSampleSink> _logger;
         private readonly DeviceClient _client;
 
-        private static readonly JsonSerializerOptions jsonSerializerOptions = new ()
+        private static readonly JsonSerializerOptions jsonSerializerOptions = new()
         {
             Converters =
             {
@@ -21,11 +23,11 @@ namespace OpcIotHub.AzureIotHub
             }
         };
 
-        public AzureSampleSink(ILogger<AzureSampleSink> logger, IConfigurationAzureIotHub configuration)
+        public AzureSampleSink(ILogger<AzureSampleSink> logger, ConfigurationAzureIotHub configuration)
         {
             _logger = logger;
             // Connect to the IoT hub using the MQTT protocol
-            _logger.LogInformation("Creating device client to: {0}", configuration.IotHubConnectionString);
+            _logger.LogInformation("Creating device client to: {IotHubConnectionString}", configuration.IotHubConnectionString);
             _client = DeviceClient.CreateFromConnectionString(configuration.IotHubConnectionString, _transportType);
         }
 

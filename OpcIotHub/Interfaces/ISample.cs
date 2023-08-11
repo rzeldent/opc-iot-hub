@@ -1,6 +1,7 @@
 ﻿using System;
+using OpcIotHub.Helpers;
 
-namespace OpcIotHub
+namespace OpcIotHub.Interfaces
 {
     public interface ISample
     {

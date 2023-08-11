@@ -8,6 +8,13 @@
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'OpcAzureIot' ">
     <ExternalConsole>true</ExternalConsole>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Logs\**" />
+    <Content Remove="Logs\**" />
+    <EmbeddedResource Remove="Logs\**" />
+    <None Remove="Logs\**" />
+  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Workstation.UaClient" Version="3.2.0" />
     <PackageReference Include="Microsoft.Azure.Devices.Client" Version="1.42.0" />
@@ -51,9 +58,9 @@
     <None Remove="MQTTnet.Extensions.ManagedClient" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Opc\" />
-    <Folder Include="AzureIotHub\" />
+    <Folder Include="Services\Opc\" />
+    <Folder Include="Services\AzureIotHub\" />
     <Folder Include="Mocks\" />
-    <Folder Include="Mqtt\" />
+    <Folder Include="Services\Mqtt\" />
   </ItemGroup>
 </Project>

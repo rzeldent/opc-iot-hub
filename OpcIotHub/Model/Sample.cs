@@ -1,6 +1,8 @@
 ﻿using System;
+using OpcIotHub.Helpers;
+using OpcIotHub.Interfaces;
 
-namespace OpcIotHub
+namespace OpcIotHub.Model
 {
     public class Sample : ISample
     {

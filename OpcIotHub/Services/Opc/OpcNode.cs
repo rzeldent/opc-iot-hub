@@ -1,6 +1,7 @@
-﻿using Workstation.ServiceModel.Ua;
+﻿using OpcIotHub.Helpers;
+using Workstation.ServiceModel.Ua;
 
-namespace OpcIotHub.Opc
+namespace OpcIotHub.Services.Opc
 {
     public struct OpcNode
     {

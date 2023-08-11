@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace OpcIotHub
+namespace OpcIotHub.Interfaces
 {
     public interface ISampleSink : IObserver<ISample>
     {

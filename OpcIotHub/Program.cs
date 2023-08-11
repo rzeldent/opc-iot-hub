@@ -1,31 +1,26 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using OpcIotHub;
+using OpcIotHub.Interfaces;
+using OpcIotHub.Services.Mqtt;
+using OpcIotHub.Settings;
 using Serilog;
 
-namespace OpcIotHub
-{
-    public static class Program
-    {
-        public static void Main(string[] args)
-        {
-            CreateHostBuilder(args).Build().Run();
-        }
+var builder = Host.CreateDefaultBuilder(args);
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureServices((hostContext, services) =>
-                {
-                    services.AddTransient<IConfigurationAzureIotHub, ConfigurationOpcIotHub>();
-                    services.AddTransient<IConfigurationMqtt, ConfigurationOpcIotHub>();
-                    services.AddTransient<IConfigurationOpc, ConfigurationOpcIotHub>();
-                    //services.AddTransient<ISampleSink, AzureIotHub.AzureSampleSink>();
-                    services.AddTransient<ISampleSink, Mqtt.MqttSampleSink>();
-                    //services.AddTransient<ISampleSink, Mocks.MockSampleSink>();
-                    //services.AddTransient<ISampleSource, Opc.OpcSampleSource>();
-                    services.AddTransient<ISampleSource, Mocks.MockSampleSource>();
-                    services.AddHostedService<Worker>();
-                })
-                .UseSerilog((hostingContext, loggerConfiguration) => loggerConfiguration
-                    .ReadFrom.Configuration(hostingContext.Configuration));
-           }
-}
+builder.ConfigureServices((context, services) => services
+        .Configure<ConfigurationOpc>(context.Configuration.GetSection(ConfigurationOpc.Section))
+        .Configure<ConfigurationAzureIotHub>(context.Configuration.GetSection(ConfigurationAzureIotHub.Section))
+        .Configure<ConfigurationMqtt>(context.Configuration.GetSection(ConfigurationMqtt.Section))
+        //.AddTransient<ISampleSink, AzureIotHub.AzureSampleSink>()
+        .AddTransient<ISampleSink, MqttSampleSink>()
+        //.AddTransient<ISampleSink, Mocks.MockSampleSink>()
+        //.AddTransient<ISampleSource, Opc.OpcSampleSource>()
+        .AddTransient<ISampleSource, OpcIotHub.Mocks.MockSampleSource>()
+        .AddHostedService<Worker>()
+        )
+    .UseSerilog((context, services, configuration) => configuration
+        .ReadFrom.Configuration(context.Configuration)
+    )
+    .Build()
+    .Run();

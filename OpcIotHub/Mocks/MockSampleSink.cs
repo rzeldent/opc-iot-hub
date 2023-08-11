@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.Extensions.Logging;
+using OpcIotHub.Interfaces;
 
 namespace OpcIotHub.Mocks
 {

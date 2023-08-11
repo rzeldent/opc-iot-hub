@@ -4,6 +4,9 @@ using System.Reactive.Subjects;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using OpcIotHub.Helpers;
+using OpcIotHub.Interfaces;
+using OpcIotHub.Model;
 
 namespace OpcIotHub.Mocks
 {

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.ComponentModel.DataAnnotations;
 
-namespace OpcIotHub
+namespace OpcIotHub.Helpers
 {
     public static class DisplayAttributes
     {
@@ -34,19 +34,19 @@ namespace OpcIotHub
         // [Display(Name = "Something To Name")]
         public static string GetDisplay(this Enum enumValue)
         {
-            return GetAttribute<DisplayAttribute>(enumValue).Name;
+            return enumValue.GetAttribute<DisplayAttribute>().Name;
         }
 
         // [Description = "Something To Describe")]
         public static string GetDescription<T>(this Enum enumValue)
         {
-            return GetAttribute<DescriptionAttribute>(enumValue).Description;
+            return enumValue.GetAttribute<DescriptionAttribute>().Description;
         }
 
         // [DisplayName = "Something To Name")]
         public static string GetDisplayName<T>(this Enum enumValue)
         {
-            return GetAttribute<DisplayNameAttribute>(enumValue).DisplayName;
+            return enumValue.GetAttribute<DisplayNameAttribute>().DisplayName;
         }
     }
 }
