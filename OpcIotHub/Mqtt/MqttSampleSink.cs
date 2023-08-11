@@ -68,7 +68,7 @@ namespace OpcIotHub.Mqtt
             await _client.EnqueueAsync(new MqttApplicationMessage
             {
                 Topic = _configuration.Topic,
-                Payload = Encoding.UTF8.GetBytes(json),
+                PayloadSegment = Encoding.UTF8.GetBytes(json),
                 QualityOfServiceLevel = MqttQualityOfServiceLevel.AtLeastOnce
             });
 

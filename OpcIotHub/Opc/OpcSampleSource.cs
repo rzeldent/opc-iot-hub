@@ -52,7 +52,7 @@ namespace OpcIotHub.Opc
 
             while (!token.IsCancellationRequested)
             {
-                var channel = new UaTcpSessionChannel(clientDescription, certificateStore, userIdentity, Configuration.OpcEndpointUrl, SecurityPolicyUris.None);
+                var channel = new ClientSessionChannel(clientDescription, certificateStore, userIdentity, Configuration.OpcEndpointUrl, SecurityPolicyUris.None);
                 try
                 {
                     // try opening a session and reading a few nodes.
